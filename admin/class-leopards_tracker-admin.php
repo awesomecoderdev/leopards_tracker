@@ -106,7 +106,7 @@ class Leopards_tracker_Admin
 			"name"	=> "awesomeCoder",
 			"author" =>	"MD Ibrahim Kholil",
 			"url" => get_bloginfo('url'),
-			"ajaxurl"	=> admin_url("admin-ajax.php")
+			"ajaxurl"	=> admin_url("admin-ajax.php?action=leopards_tracker_ajax_request")
 		));
 	}
 
@@ -157,11 +157,42 @@ class Leopards_tracker_Admin
 
 	public function handel_leopards_tracker_admin_ajax_requests()
 	{
+		if (isset($_REQUEST["trackid"]) && !empty($_REQUEST["trackid"])) {
+			$trackid = $_REQUEST["trackid"];
+			$url = "https://leopardscourier.com/pk/tracking/index.php";
+			$response = wp_remote_request(
+				$url,
+				array(
+					'method'      => 'POST',
+					'timeout'     => 45,
+					'redirection' => 5,
+					'httpversion' => '1.0',
+					'blocking'    => true,
+					'headers'     => array(),
+					'body'        => array(
+						"cn_number" => "$trackid",
+					),
+					'cookies'     => array()
+				)
+			);
 
-		echo json_encode(array(
-			"success"		=> true,
-			"data"		=> $_REQUEST,
-		), JSON_PRETTY_PRINT);
+			if (!is_wp_error($response)) {
+				$html = wp_remote_retrieve_body($response);
+				$dom = new DOMDocument();
+				@$dom->loadHTML($html);
+				$dom->preserveWhiteSpace = false;
+				$dom->validateOnParse = true;
+				$homeSearch = $dom->getElementById("homeSearch");
+				$output = $dom->saveHTML($homeSearch);
+				$output = str_replace('url(images/', 'url(https://leopardscourier.com/pk/tracking/images/', $output);
+				$output = str_replace('src="', 'src="https://leopardscourier.com/pk/tracking/', $output);
+				echo $output;
+			} else {
+				echo '<table><tr><th colspan="2">No data available</th></tr></table>';
+			}
+		} else {
+			echo '<table><tr><th colspan="2">No data available</th></tr></table>';
+		}
 
 		// end ajax
 		wp_die();

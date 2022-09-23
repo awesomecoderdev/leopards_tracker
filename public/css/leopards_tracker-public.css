@@ -2,6 +2,20 @@
  * All of the CSS for your public-facing functionality should be
  * included in this file.
  */
-.leopards_tracker th {
+/* .leopards_tracker th {
     text-align: center;
+} */
+
+#homeSearch table,
+#homeSearch th,
+#homeSearch tr,
+#homeSearch td
+ {
+    background-size: cover !important;
+    background-repeat: no-repeat !important;
+    border: transparent !important;
+}
+
+#gvTrackingCheck{
+    margin: 0 auto;
 }

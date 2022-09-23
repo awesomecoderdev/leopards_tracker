@@ -120,12 +120,6 @@ class Leopards_tracker
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-leopards_tracker-shortcode.php';
 
 		/**
-		 * The class responsible for defining api functionality
-		 * of the plugin.
-		 */
-		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-leopards_tracker-api.php';
-
-		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
 		require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-leopards_tracker-admin.php';
@@ -178,7 +172,56 @@ class Leopards_tracker
 		$this->loader->add_action('admin_menu', $plugin_admin, 'leopards_tracker_create_menu');
 
 		// action hooks for ajax request
-		$this->loader->add_action("wp_ajax_leopards_tracker_ajax_request", $plugin_admin, 'handel_leopards_tracker_admin_ajax_requests');
+		$this->loader->add_action("wp_ajax_leopards_tracker_ajax_request", $this, 'handel_leopards_tracker_admin_ajax_requests');
+		$this->loader->add_action("wp_ajax_nopriv_leopards_tracker_ajax_request", $this, 'handel_leopards_tracker_admin_ajax_requests');
+	}
+
+
+	public function handel_leopards_tracker_admin_ajax_requests()
+	{
+		if (isset($_REQUEST["trackid"]) && !empty($_REQUEST["trackid"])) {
+			$trackid = $_REQUEST["trackid"];
+			$url = "https://leopardscourier.com/pk/tracking/index.php";
+			$response = wp_remote_request(
+				$url,
+				array(
+					'method'      => 'POST',
+					'timeout'     => 45,
+					'redirection' => 5,
+					'httpversion' => '1.0',
+					'blocking'    => true,
+					'sslverify'   => false,
+					'headers'     => array(),
+					'body'        => array(
+						"cn_number" => "$trackid",
+					),
+					'cookies'     => array()
+				)
+			);
+
+			if (!is_wp_error($response)) {
+				$html = wp_remote_retrieve_body($response);
+				$dom = new DOMDocument();
+				@$dom->loadHTML($html);
+				$dom->preserveWhiteSpace = false;
+				$dom->validateOnParse = true;
+				$homeSearch = $dom->getElementById("homeSearch");
+				$output = $dom->saveHTML($homeSearch);
+
+
+				$output = str_replace('background="images/', 'background="https://leopardscourier.com/pk/tracking/images/', $output);
+				$output = str_replace('url(images/', 'url(https://leopardscourier.com/pk/tracking/images/', $output);
+				$output = str_replace('src="', 'src="https://leopardscourier.com/pk/tracking/', $output);
+				echo $output;
+			} else {
+				echo '<table><tr><th colspan="2">No data available</th></tr></table>';
+			}
+		} else {
+			echo '<table><tr><th colspan="2">No data available</th></tr></table>';
+		}
+
+		// end ajax
+		wp_die();
 	}
 
 	/**
@@ -195,6 +238,10 @@ class Leopards_tracker
 
 		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
 		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
+
+		// action hooks for ajax request
+		$this->loader->add_action("wp_ajax_leopards_tracker_ajax_request", $this, 'handel_leopards_tracker_admin_ajax_requests');
+		$this->loader->add_action("wp_ajax_nopriv_leopards_tracker_ajax_request", $this, 'handel_leopards_tracker_admin_ajax_requests');
 	}
 
 	/**

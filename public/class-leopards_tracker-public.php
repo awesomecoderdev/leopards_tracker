@@ -99,5 +99,13 @@ class Leopards_tracker_Public
 		 */
 
 		wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/leopards_tracker-public.js', array('jquery'), $this->version, false);
+
+		// Some local vairable to get ajax url
+		wp_localize_script($this->plugin_name, 'leopards_tracker', array(
+			"name"	=> "awesomeCoder",
+			"author" =>	"MD Ibrahim Kholil",
+			"url" => get_bloginfo('url'),
+			"ajaxurl"	=> admin_url("admin-ajax.php?action=leopards_tracker_ajax_request")
+		));
 	}
 }
