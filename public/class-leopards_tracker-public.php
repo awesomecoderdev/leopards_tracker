@@ -98,7 +98,7 @@ class Leopards_tracker_Public
 		 * class.
 		 */
 
-		wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/leopards_tracker-public.js', array('jquery'), $this->version, false);
+		wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/leopards_tracker-public.js', array('jquery'), time(), false);
 
 		// Some local vairable to get ajax url
 		wp_localize_script($this->plugin_name, 'leopards_tracker', array(
