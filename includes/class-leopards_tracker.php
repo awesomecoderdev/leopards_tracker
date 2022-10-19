@@ -181,7 +181,7 @@ class Leopards_tracker
 	{
 		if (isset($_REQUEST["trackid"]) && !empty($_REQUEST["trackid"])) {
 			$trackid = $_REQUEST["trackid"];
-			$url = "https://leopardscourier.com/pk/tracking/index.php";
+			$url = "https://www.leopardscourier.com/tracking/index.php";
 			$response = wp_remote_request(
 				$url,
 				array(
@@ -209,9 +209,9 @@ class Leopards_tracker
 				$output = $dom->saveHTML($homeSearch);
 
 
-				$output = str_replace('background="images/', 'background="https://leopardscourier.com/pk/tracking/images/', $output);
-				$output = str_replace('url(images/', 'url(https://leopardscourier.com/pk/tracking/images/', $output);
-				$output = str_replace('src="', 'src="https://leopardscourier.com/pk/tracking/', $output);
+				$output = str_replace('background="images/', 'background="https://www.leopardscourier.com/tracking/images/', $output);
+				$output = str_replace('url(images/', 'url(https://www.leopardscourier.com/tracking/images/', $output);
+				$output = str_replace('src="', 'src="https://www.leopardscourier.com/tracking/', $output);
 				echo $output;
 			} else {
 				echo '<table><tr><th colspan="2">No data available</th></tr></table>';
