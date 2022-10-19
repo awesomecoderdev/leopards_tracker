@@ -18,7 +18,7 @@
  *
  * @package    Leopards_tracker
  * @subpackage Leopards_tracker/public
- * @author     MD Ibrahim Kholil <awesomecoder.dev@gmail.com>
+ * @author     Mohammad Ibrahim <awesomecoder.dev@gmail.com>
  */
 class Leopards_tracker_Public
 {
@@ -103,7 +103,7 @@ class Leopards_tracker_Public
 		// Some local vairable to get ajax url
 		wp_localize_script($this->plugin_name, 'leopards_tracker', array(
 			"name"	=> "awesomeCoder",
-			"author" =>	"MD Ibrahim Kholil",
+			"author" =>	"Mohammad Ibrahim",
 			"url" => get_bloginfo('url'),
 			"ajaxurl"	=> admin_url("admin-ajax.php?action=leopards_tracker_ajax_request")
 		));

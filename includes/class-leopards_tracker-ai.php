@@ -25,7 +25,7 @@
  * @since      1.0.0
  * @package    Leopards_tracker
  * @subpackage Leopards_tracker/includes
- * @author     MD Ibrahim Kholil <awesomecoder.dev@gmail.com>
+ * @author     Mohammad Ibrahim <awesomecoder.dev@gmail.com>
 
  *                                                            _
  *                                                           | |
